@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="refresh" content="0;URL=javascript:fermer();">
     <title>Expo : Médiathèque De POLYTECH</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -35,13 +35,10 @@
         </p>
         <ul class="nav nav-pills nav-stacked">
             <li role="presentation">
-                <a href="Controleur?action=ajouterAdherent">Ajout Adhérent</a>
+                <a href="ControleurAdherents?action=ajouterAdherent">Ajout Adhérent</a>
             </li>
             <li role="presentation">
-                <a href="Controleur?action=listerAdherent">Lister les adhérents</a>
-            </li>
-            <li role="presentation">
-                <a href="javascript:fermer();">Quitter</a>
+                <a href="ControleurAdherents?action=listerAdherent">Lister les adhérents</a>
             </li>
         </ul>
     </div>
