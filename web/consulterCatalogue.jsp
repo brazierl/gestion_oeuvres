@@ -5,6 +5,8 @@
   Time: 12:09
   To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -18,18 +20,22 @@
 <div class="container">
     <H1> Consulter le catalogue </H1>
     <div>
-        <table>
+        <table class="table table-striped">
             <tr>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th>Numéro de l'oeuvre</th>
+                <th>Titre de l'oeuvre</th>
+                <th>Propriétaire</th>
+                <th>Réserver/Modifier</th>
             </tr>
-            <c:forEach items="${mesAdherents}" var="item">
+            <c:forEach items="${mesOeuvres}" var="item">
                 <tr>
-                    <td>${item.idAdherent}</td>
-                    <td>${item.nomAdherent}</td>
-                    <td>${item.prenomAdherent}</td>
-                    <td>${item.villeAdherent}</td>
+                    <td>${item.idOeuvrepret}</td>
+                    <td>${item.titreOeuvrepret}</td>
+                    <td>${item.proprietaire.prenomProprietaire} ${item.proprietaire.nomProprietaire}</td>
+                    <td>
+                        <a class="btn btn-primary btn-sm" type="button" href="ControleurOeuvres?reserverOeuvre"><span class="glyphicon glyphicon-ok"></span></a>
+                        <a class="btn btn-success btn-sm" type="button" href="ControleurOeuvres?modifierOeuvre"><span class="glyphicon glyphicon-pencil"></span></a>
+                    </td>
                 </tr>
             </c:forEach>
         </table>

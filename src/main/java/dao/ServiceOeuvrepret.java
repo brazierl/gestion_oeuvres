@@ -11,22 +11,6 @@ import java.util.List;
 
 public class ServiceOeuvrepret {
 
-	// Mise � jour des caract�ristiques d'un adh�rent
-	// Le booleen indique s'il s'agit d'un nouvel adh�rent, auquel cas on fait
-	// une cr�ation
-
-	public void insert(Adherent unAdherent) throws MonException {
-		String mysql;
-
-		DialogueBd unDialogueBd = DialogueBd.getInstance();
-		try {
-			mysql = "";
-			unDialogueBd.insertionBD(mysql);
-		} catch (MonException e) {
-			throw e;
-		}
-	}
-
 	// gestion des adherents
 	// Consultation d'un adh�rent par son num�ro
 	// Fabrique et renvoie un objet adh�rent contenant le r�sultat de la requ�te
@@ -55,7 +39,7 @@ public class ServiceOeuvrepret {
 		Oeuvrepret uneOp = new Oeuvrepret();
 		// il faut redecouper la liste pour retrouver les lignes
 		String ss = rs.get(start + 0).toString();
-		String sss = rs.get(start + 2).toString();
+		String sss = rs.get(start + 1).toString();
 		uneOp.setIdOeuvrepret(Integer.parseInt(rs.get(start + 0).toString()));
 		uneOp.setTitreOeuvrepret(rs.get(start + 1).toString());
 		Proprietaire prop = new ServiceProprietaire().get(Integer.parseInt(rs.get(start + 2).toString()));
@@ -69,7 +53,7 @@ public class ServiceOeuvrepret {
 		while (index < rs.size()) {
 			Oeuvrepret uneOp = buildObjectFromRS(rs,index);
 			mesOeuvres.add(uneOp);
-			index += 4;
+			index += 3;
 		}
 		return mesOeuvres;
 	}

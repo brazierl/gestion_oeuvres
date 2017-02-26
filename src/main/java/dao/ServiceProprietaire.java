@@ -40,7 +40,7 @@ public class ServiceProprietaire {
         while (index < rs.size()) {
             Proprietaire unA = buildObjectFromRS(rs,index);
             mesProprietaires.add(unA);
-            index += 4;
+            index += 3;
         }
         return mesProprietaires;
     }
