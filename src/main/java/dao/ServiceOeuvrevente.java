@@ -26,7 +26,7 @@ public class ServiceOeuvrevente {
 	// Fabrique et renvoie une liste d'objets adh�rent contenant le r�sultat de
 	// la requ�te BDD
 	public List<Oeuvrevente> getList() throws MonException {
-		String mysql = "select * from oeuvrepret";
+		String mysql = "select * from oeuvrevente";
 		List<Oeuvrevente> mesOeuvres = new ArrayList<Oeuvrevente>();
 		DialogueBd unDialogueBd = DialogueBd.getInstance();
 		List<Object> rs = DialogueBd.lecture(mysql);

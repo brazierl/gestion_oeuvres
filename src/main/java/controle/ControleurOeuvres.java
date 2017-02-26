@@ -35,7 +35,7 @@ public class ControleurOeuvres extends Controleur {
             destinationPage = "/consulterCatalogue.jsp";
         }
         else if(RESERVER_OEUVRE.equals(actionName)){
-
+            
             destinationPage = "/reserverOeuvre.jsp";
         }
         else if(INSERER_OEUVRE.equals(actionName)){

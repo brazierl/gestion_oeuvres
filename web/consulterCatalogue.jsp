@@ -22,15 +22,15 @@
     <div>
         <table class="table table-striped">
             <tr>
-                <th>Numéro de l'oeuvre</th>
-                <th>Titre de l'oeuvre</th>
+                <th>Titre</th>
+                <th>Prix</th>
                 <th>Propriétaire</th>
                 <th>Réserver/Modifier</th>
             </tr>
             <c:forEach items="${mesOeuvres}" var="item">
                 <tr>
-                    <td>${item.idOeuvrepret}</td>
-                    <td>${item.titreOeuvrepret}</td>
+                    <td>${item.titreOeuvrevente}</td>
+                    <td>${item.prixOeuvrevente}</td>
                     <td>${item.proprietaire.prenomProprietaire} ${item.proprietaire.nomProprietaire}</td>
                     <td>
                         <a class="btn btn-primary btn-sm" type="button" href="ControleurOeuvres?reserverOeuvre"><span class="glyphicon glyphicon-ok"></span></a>
