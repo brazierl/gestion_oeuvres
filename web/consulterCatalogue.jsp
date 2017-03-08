@@ -33,8 +33,8 @@
                     <td>${item.prixOeuvrevente}</td>
                     <td>${item.proprietaire.prenomProprietaire} ${item.proprietaire.nomProprietaire}</td>
                     <td>
-                        <a class="btn btn-primary btn-sm" type="button" href="ControleurOeuvres?reserverOeuvre"><span class="glyphicon glyphicon-ok"></span></a>
-                        <a class="btn btn-success btn-sm" type="button" href="ControleurOeuvres?modifierOeuvre"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a class="btn btn-primary btn-sm" type="button" href="ControleurOeuvres?reserverOeuvre&idOeuvre=${item.idOeuvrevente}"><span class="glyphicon glyphicon-ok"></span></a>
+                        <a class="btn btn-success btn-sm" type="button" href="ControleurOeuvres?modifierOeuvre&idOeuvre=${item.idOeuvrevente}"><span class="glyphicon glyphicon-pencil"></span></a>
                     </td>
                 </tr>
             </c:forEach>

@@ -9,6 +9,7 @@ import dao.ServiceOeuvrevente;
 import dao.ServiceReservation;
 import meserreurs.MonException;
 import metier.Adherent;
+import metier.Oeuvrevente;
 import metier.Reservation;
 import utilitaires.FonctionsUtiles;
 
@@ -35,7 +36,13 @@ public class ControleurOeuvres extends Controleur {
             destinationPage = "/consulterCatalogue.jsp";
         }
         else if(RESERVER_OEUVRE.equals(actionName)){
-            
+            try {
+                int id = Integer.parseInt(request.getParameter("idOeuvre"));
+                Oeuvrevente uneOeuvre = new ServiceOeuvrevente().get(id);
+                request.setAttribute("monOeuvre",uneOeuvre);
+            } catch (MonException e) {
+                e.printStackTrace();
+            }
             destinationPage = "/reserverOeuvre.jsp";
         }
         else if(INSERER_OEUVRE.equals(actionName)){
