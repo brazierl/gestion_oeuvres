@@ -1,20 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Ajouter un adhérent</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/main.css" rel="stylesheet">
-</head>
-<script type="text/javascript" src="js/foncControle.js"></script>
-<body>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <jsp:include page="header.jsp"/>
 <div class="container">
     <H1> Ajout d'un adhérent </H1>
     <DIV>
-        <FORM name='identification' method="post" action="Controleur?action=insererAdherent" onsubmit="return teste()">
+        <FORM name='identification' method="post" action="ControleurAdherents?action=insererAdherent" onsubmit="return teste()">
             <div class="form-group">
                 <label for="nom" class="control-label">
                     Nom de l'adherent :
@@ -41,7 +32,3 @@
     </DIV>
 </div>
 <jsp:include page="footer.jsp"/>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery.min.js"></script>
-</body>
-</html>

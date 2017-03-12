@@ -32,7 +32,7 @@ public class ServiceAdherent {
 	// Fabrique et renvoie un objet adh�rent contenant le r�sultat de la requ�te
 	// BDD
 	public Adherent get(int numero) throws MonException {
-		String mysql = "select * from adherent where numero_adherent=" + numero;
+		String mysql = "select * from adherent where id_adherent=" + numero;
 		DialogueBd unDialogueBd = DialogueBd.getInstance();
 		List<Object> rs = DialogueBd.lecture(mysql);
 		Adherent unA = buildObjectFromRS(rs,0);

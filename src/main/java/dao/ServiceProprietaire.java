@@ -25,6 +25,15 @@ public class ServiceProprietaire {
         return unProp;
     }
 
+    public List<Proprietaire> getList() throws MonException {
+        String mysql = "select * from proprietaire";
+        List<Proprietaire> mesProprietaires = new ArrayList<Proprietaire>();
+        DialogueBd unDialogueBd = DialogueBd.getInstance();
+        List<Object> rs = DialogueBd.lecture(mysql);
+        mesProprietaires = buildListFromRS(rs);
+        return mesProprietaires;
+    }
+
     private Proprietaire buildObjectFromRS(List<Object> rs, int start){
         Proprietaire unProp = new Proprietaire();
         // il faut redecouper la liste pour retrouver les lignes

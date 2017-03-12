@@ -3,15 +3,12 @@ package controle;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 
-import dao.ServiceAdherent;
-import dao.ServiceOeuvrepret;
-import dao.ServiceOeuvrevente;
-import dao.ServiceReservation;
+import dao.*;
 import meserreurs.MonException;
-import metier.Adherent;
-import metier.Oeuvrevente;
-import metier.Reservation;
+import metier.*;
 import utilitaires.FonctionsUtiles;
+
+import java.util.Date;
 
 /**
  * Servlet implementation class ControleurAdherents
@@ -20,8 +17,9 @@ import utilitaires.FonctionsUtiles;
 public class ControleurOeuvres extends Controleur {
 
     private static final String CONSULTER_CATALOGUE = "consulterCatalogue";
-    private static final String RESERVER_OEUVRE = "reserverOeuvre";
+    private static final String AJOUTER_OEUVRE = "ajouterOeuvre";
     private static final String INSERER_OEUVRE = "insererOeuvre";
+    private static final String MODIFIER_OEUVRE = "modifierOeuvre";
 
     protected String dispatcher(HttpServletRequest request) {
         String destinationPage;
@@ -30,33 +28,74 @@ public class ControleurOeuvres extends Controleur {
             try {
                 ServiceOeuvrevente unServiceOeuvrevente = new ServiceOeuvrevente();
                 request.setAttribute("mesOeuvres", unServiceOeuvrevente.getList());
-            } catch (MonException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             destinationPage = "/consulterCatalogue.jsp";
         }
-        else if(RESERVER_OEUVRE.equals(actionName)){
+        else if (MODIFIER_OEUVRE.equals(actionName)) {
             try {
-                int id = Integer.parseInt(request.getParameter("idOeuvre"));
-                Oeuvrevente uneOeuvre = new ServiceOeuvrevente().get(id);
-                request.setAttribute("monOeuvre",uneOeuvre);
+                int idOeuvre = Integer.parseInt(request.getParameter("idOeuvre"));
+                Oeuvrevente uneOeuvre = new Oeuvrevente();
+                if(request.getParameter("txtTitre")!=null && request.getParameter("txtEtat")!=null && request.getParameter("txtPrix")!=null && request.getParameter("txtIDProprietaire")!=null){
+                    if(request.getParameter("txtEtat").length()>1){
+                        request.setAttribute("mesErreurs", new String[]{"Un problème a été rencontré. Veillez à ce que le champ état ne comporte qu'un seul caractère."});
+                    }
+                    else{
+                        uneOeuvre.setTitreOeuvrevente(request.getParameter("txtTitre"));
+                        uneOeuvre.setEtatOeuvrevente(request.getParameter("txtEtat"));
+                        uneOeuvre.setPrixOeuvrevente(Float.parseFloat(request.getParameter("txtPrix")));
+                        uneOeuvre.setProprietaire(new ServiceProprietaire().get(Integer.parseInt(request.getParameter("txtIDProprietaire"))));
+                        new ServiceOeuvrevente().update(idOeuvre,uneOeuvre);
+                        request.setAttribute("mesInfos", new String[]{"L'oeuvre numéro "+idOeuvre+" a bien été modifiée."});
+                    }
+                }
+                uneOeuvre = new ServiceOeuvrevente().get(idOeuvre);
+                request.setAttribute("mesProprietaires", new ServiceProprietaire().getList());
+                request.setAttribute("monOeuvre", uneOeuvre);
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("mesErreurs", new String[]{"Un problème a été rencontré. Veillez à avoir renseigner tous les champs correctement."});
+            }
+            destinationPage = "/modifierOeuvre.jsp";
+        }
+        else if (AJOUTER_OEUVRE.equals(actionName)) {
+            try {
+                request.setAttribute("mesProprietaires", new ServiceProprietaire().getList());
             } catch (MonException e) {
                 e.printStackTrace();
+                request.setAttribute("mesErreurs", new String[]{"Un problème a été rencontré en chargeant les propriétaires."});
             }
-            destinationPage = "/reserverOeuvre.jsp";
+            destinationPage = "/ajouterOeuvre.jsp";
         }
-        else if(INSERER_OEUVRE.equals(actionName)){
+        else if (INSERER_OEUVRE.equals(actionName)) {
+            Oeuvrevente uneOeuvre = new Oeuvrevente();
             try {
-                Reservation uneResa = new Reservation();
-                uneResa.setAdherent(new ServiceAdherent().get(Integer.parseInt(request.getParameter("txtIDAdherent"))));
-                uneResa.setOeuvrevente(new ServiceOeuvrevente().get(Integer.parseInt(request.getParameter("txtIDOeuvrevente"))));
-                ServiceReservation unServiceResa = new ServiceReservation();
-                unServiceResa.insert(uneResa);
+                uneOeuvre.setTitreOeuvrevente(request.getParameter("txtTitre"));
+                uneOeuvre.setEtatOeuvrevente(request.getParameter("txtEtat"));
+                uneOeuvre.setPrixOeuvrevente(Float.parseFloat(request.getParameter("txtPrix")));
+                uneOeuvre.setProprietaire(new ServiceProprietaire().get(Integer.parseInt(request.getParameter("txtIDProprietaire"))));
+                new ServiceOeuvrevente().insert(uneOeuvre);
+                request.setAttribute("mesInfos", new String[]{"L'oeuvre a bien été ajoutée."});
+                try {
+                    ServiceOeuvrevente unServiceOeuvrevente = new ServiceOeuvrevente();
+                    request.setAttribute("mesOeuvres", unServiceOeuvrevente.getList());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                destinationPage = "/consulterCatalogue.jsp";
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
+                request.setAttribute("mesErreurs", new String[]{"Un problème a été rencontré. Veillez à avoir renseigner tous les champs correctement."});
+                request.setAttribute("monOeuvre", uneOeuvre);
+                try {
+                    request.setAttribute("mesProprietaires", new ServiceProprietaire().getList());
+                } catch (MonException e1) {
+                    e1.printStackTrace();
+                    request.setAttribute("mesErreurs", new String[]{"Un problème a été rencontré en chargeant les propriétaires."});
+                }
+                destinationPage = "/ajouterOeuvre.jsp";
             }
-            destinationPage = "/index.jsp";
         }
         else{
             destinationPage = error(request);

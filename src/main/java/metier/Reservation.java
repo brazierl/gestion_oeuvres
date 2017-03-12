@@ -15,17 +15,19 @@ public class Reservation implements Serializable {
 	private Date date;
 	private Adherent adherent;
 	private Oeuvrevente oeuvrevente;
+	private String statut;
 
 	public Reservation() {
 	}
 
 
 
-	public Reservation(Date date, Adherent adherent, Oeuvrevente oeuvrevente) {
+	public Reservation(Date date, Adherent adherent, Oeuvrevente oeuvrevente, String statut) {
 		super();
 		this.date = date;
 		this.adherent = adherent;
 		this.oeuvrevente = oeuvrevente;
+		this.statut = statut;
 	}
 
 
@@ -54,4 +56,11 @@ public class Reservation implements Serializable {
 		this.oeuvrevente = oeuvrevente;
 	}
 
+	public String getStatut() {
+		return statut;
+	}
+
+	public void setStatut(String statut) {
+		this.statut = statut;
+	}
 }

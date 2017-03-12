@@ -15,7 +15,7 @@ public class ServiceOeuvrevente {
 	// Fabrique et renvoie un objet adh�rent contenant le r�sultat de la requ�te
 	// BDD
 	public Oeuvrevente get(int numero) throws MonException {
-		String mysql = "";
+		String mysql = "select * from oeuvrevente where id_oeuvrevente="+numero;
 		DialogueBd unDialogueBd = DialogueBd.getInstance();
 		List<Object> rs = DialogueBd.lecture(mysql);
 		Oeuvrevente uneOv = buildObjectFromRS(rs,0);
@@ -55,5 +55,27 @@ public class ServiceOeuvrevente {
 			index += 5;
 		}
 		return mesOeuvres;
+	}
+
+	public void update(int idOeuvre, Oeuvrevente uneOeuvre) {
+		String mysql;
+		DialogueBd unDialogueBd = DialogueBd.getInstance();
+		try {
+			mysql = "update oeuvrevente set titre_oeuvrevente = '"+uneOeuvre.getTitreOeuvrevente()+"', etat_oeuvrevente = '"+uneOeuvre.getEtatOeuvrevente()+"', prix_oeuvrevente = "+uneOeuvre.getPrixOeuvrevente()+", id_proprietaire = "+uneOeuvre.getProprietaire().getIdProprietaire()+" where id_oeuvrevente = "+idOeuvre;
+			unDialogueBd.execute(mysql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void insert(Oeuvrevente uneOeuvre) {
+		String mysql;
+		DialogueBd unDialogueBd = DialogueBd.getInstance();
+		try {
+			mysql = "insert into oeuvrevente (titre_oeuvrevente, etat_oeuvrevente, prix_oeuvrevente, id_proprietaire) values('"+uneOeuvre.getTitreOeuvrevente()+"', '"+uneOeuvre.getEtatOeuvrevente()+"', "+uneOeuvre.getPrixOeuvrevente()+", "+uneOeuvre.getProprietaire().getIdProprietaire()+")";
+			unDialogueBd.insertionBD(mysql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

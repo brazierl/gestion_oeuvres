@@ -31,3 +31,7 @@ footer {
     font-size: large;
     font-weight: bold;
 }
+
+.message{
+    margin: 10px;
+}

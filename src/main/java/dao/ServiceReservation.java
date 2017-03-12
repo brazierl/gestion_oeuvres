@@ -17,13 +17,23 @@ import java.util.List;
 public class ServiceReservation {
     public void insert(Reservation uneResa) throws MonException {
         String mysql;
-
         DialogueBd unDialogueBd = DialogueBd.getInstance();
         try {
-            mysql = "insert into reservation (id_oeuvrevente,id_adherent,date_reservation) values ('"+uneResa.getOeuvrevente().getIdOeuvrevente()+"','"+uneResa.getAdherent().getIdAdherent()+"','"+uneResa.getDate()+")";
+            mysql = "insert into reservation (id_oeuvrevente,id_adherent,date_reservation,statut) values ('"+uneResa.getOeuvrevente().getIdOeuvrevente()+"','"+uneResa.getAdherent().getIdAdherent()+"','"+FonctionsUtiles.conversionDateenChaine(uneResa.getDate(),"yyyy-mm-dd")+"','"+uneResa.getStatut()+"')";
             unDialogueBd.insertionBD(mysql);
-        } catch (MonException e) {
-            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void update(int idOeuvre, int idAdherent, Date date, Reservation nouvelleReservation){
+        String mysql;
+        DialogueBd unDialogueBd = DialogueBd.getInstance();
+        try {
+            mysql = "update reservation set id_oeuvrevente = "+nouvelleReservation.getOeuvrevente().getIdOeuvrevente()+", id_adherent = "+nouvelleReservation.getAdherent().getIdAdherent()+", date_reservation = '"+FonctionsUtiles.conversionDateenChaine(nouvelleReservation.getDate(),"yyyy-mm-dd")+"', statut = '"+nouvelleReservation.getStatut()+"' where id_oeuvrevente = "+idOeuvre+" and id_adherent = "+idAdherent+" and date_reservation = '"+FonctionsUtiles.conversionDateenChaine(date,"yyyy-mm-dd")+"'";
+            unDialogueBd.execute(mysql);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -31,12 +41,17 @@ public class ServiceReservation {
     // Consultation d'un adh�rent par son num�ro
     // Fabrique et renvoie un objet adh�rent contenant le r�sultat de la requ�te
     // BDD
-    public Reservation get(int idOeuvreVente,int idAdherent) throws MonException {
-        String mysql = "select * from reservation";
-        DialogueBd unDialogueBd = DialogueBd.getInstance();
-        List<Object> rs = DialogueBd.lecture(mysql);
-        Reservation uneResa = buildObjectFromRS(rs,0);
-        return uneResa;
+    public Reservation get(int idOeuvreVente,int idAdherent, Date date) throws MonException {
+        try {String mysql = null;
+            mysql = "select * from reservation where id_oeuvrevente="+idOeuvreVente+" and id_adherent="+idAdherent+" and date_reservation='"+ FonctionsUtiles.conversionDateenChaine(date,"yyyy-mm-dd")+"';";
+            DialogueBd unDialogueBd = DialogueBd.getInstance();
+            List<Object> rs = DialogueBd.lecture(mysql);
+            Reservation uneResa = buildObjectFromRS(rs,0);
+            return uneResa;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new MonException();
+        }
     }
 
     // Consultation des adh�rents
@@ -59,6 +74,7 @@ public class ServiceReservation {
             Adherent adh = new ServiceAdherent().get(Integer.parseInt(rs.get(start + 1).toString()));
             uneResa.setAdherent(adh);
             uneResa.setDate(FonctionsUtiles.conversionChaineenDate(rs.get(start+2).toString(),"yyyy-mm-dd"));
+            uneResa.setStatut(rs.get(start+3).toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,7 +87,7 @@ public class ServiceReservation {
         while (index < rs.size()) {
             Reservation uneResa = buildObjectFromRS(rs,index);
             mesOeuvres.add(uneResa);
-            index += 3;
+            index += 4;
         }
         return mesOeuvres;
     }
