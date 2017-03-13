@@ -4,6 +4,7 @@ import dao.ServiceAdherent;
 import dao.ServiceOeuvrevente;
 import dao.ServiceReservation;
 import meserreurs.MonException;
+import metier.Oeuvrevente;
 import metier.Reservation;
 import utilitaires.FonctionsUtiles;
 
@@ -24,7 +25,7 @@ public class ControleurReservations extends Controleur {
     protected String dispatcher(HttpServletRequest request) {
         String destinationPage;
         String actionName = request.getParameter(ACTION_TYPE);
-        if(RESERVER_OEUVRE.equals(actionName)){
+        if (RESERVER_OEUVRE.equals(actionName)) {
             try {
                 int id = Integer.parseInt(request.getParameter("idOeuvre"));
                 request.setAttribute("mesAdherents", new ServiceAdherent().getList());
@@ -33,13 +34,14 @@ public class ControleurReservations extends Controleur {
                 e.printStackTrace();
             }
             destinationPage = "/reserverOeuvre.jsp";
-        }
-        else if(INSERER_RESERVATION.equals(actionName)){
+        } else if (INSERER_RESERVATION.equals(actionName)) {
+            Oeuvrevente uneOeuvre = null;
             try {
+                uneOeuvre = new ServiceOeuvrevente().get(Integer.parseInt(request.getParameter("txtIDOeuvre")));
                 Reservation uneResa = new Reservation();
                 uneResa.setAdherent(new ServiceAdherent().get(Integer.parseInt(request.getParameter("txtIDAdherent"))));
-                uneResa.setOeuvrevente(new ServiceOeuvrevente().get(Integer.parseInt(request.getParameter("txtIDOeuvre"))));
-                uneResa.setDate(FonctionsUtiles.conversionChaineenDate(request.getParameter("txtDate"),"yyyy-mm-dd"));
+                uneResa.setOeuvrevente(uneOeuvre);
+                uneResa.setDate(FonctionsUtiles.conversionChaineenDate(request.getParameter("txtDate"), "yyyy-mm-dd"));
                 uneResa.setStatut("en attente");
                 ServiceReservation unServiceResa = new ServiceReservation();
                 unServiceResa.insert(uneResa);
@@ -48,30 +50,33 @@ public class ControleurReservations extends Controleur {
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-                request.setAttribute("mesErreurs", new String[]{"Un problème a été rencontré. Veillez à bien renseigner la date dans le format requis."});
+                try {
+                    request.setAttribute("mesAdherents", new ServiceAdherent().getList());
+                    request.setAttribute("monOeuvre", uneOeuvre);
+                    request.setAttribute("mesErreurs", new String[]{"Un problème a été rencontré. Veillez à bien renseigner la date dans le format requis."});
+                } catch (MonException e1) {
+                    e1.printStackTrace();
+                }
                 destinationPage = "/reserverOeuvre.jsp";
             }
-        }
-        else if(CONFIRMER_RESERVATIONS.equals(actionName)){
-            try{
-                if(request.getParameter("idOeuvre")!=null && request.getParameter("date")!=null && request.getParameter("idAdherent")!=null){
+        } else if (CONFIRMER_RESERVATIONS.equals(actionName)) {
+            try {
+                if (request.getParameter("idOeuvre") != null && request.getParameter("date") != null && request.getParameter("idAdherent") != null) {
                     int idOeuvre = Integer.parseInt(request.getParameter("idOeuvre"));
                     int idAdherent = Integer.parseInt(request.getParameter("idAdherent"));
-                    Date date = FonctionsUtiles.conversionChaineenDate(request.getParameter("date"),"yyyy-mm-dd");
-                    Reservation uneResa = new ServiceReservation().get(idOeuvre,idAdherent,date);
+                    Date date = FonctionsUtiles.conversionChaineenDate(request.getParameter("date"), "yyyy-mm-dd");
+                    Reservation uneResa = new ServiceReservation().get(idOeuvre, idAdherent, date);
                     uneResa.setStatut("confirmee");
-                    new ServiceReservation().update(idOeuvre,idAdherent,date,uneResa);
-                    request.setAttribute("mesInfos", new String[]{"La réservation de "+uneResa.getAdherent().getPrenomAdherent()+" "+uneResa.getAdherent().getNomAdherent()+" pour l'oeuvre "+uneResa.getOeuvrevente().getTitreOeuvrevente()+" à la date du "+FonctionsUtiles.conversionDateenChaine(uneResa.getDate(),"dd MMMM yyyy")+" a été confirmée."});
+                    new ServiceReservation().update(idOeuvre, idAdherent, date, uneResa);
+                    request.setAttribute("mesInfos", new String[]{"La réservation de " + uneResa.getAdherent().getPrenomAdherent() + " " + uneResa.getAdherent().getNomAdherent() + " pour l'oeuvre " + uneResa.getOeuvrevente().getTitreOeuvrevente() + " à la date du " + FonctionsUtiles.conversionDateenChaine(uneResa.getDate(), "dd MMMM yyyy") + " a été confirmée."});
                 }
                 request.setAttribute("mesReservations", new ServiceReservation().getList());
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 request.setAttribute("mesErreurs", new String[]{"Un problème a été rencontré. Veuillez renouveller la confirmation."});
             }
             destinationPage = "/confirmerReservations.jsp";
-        }
-        else{
+        } else {
             destinationPage = error(request);
         }
         return destinationPage;
